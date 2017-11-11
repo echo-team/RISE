@@ -1,0 +1,98 @@
+<html>
+<head>
+</head>
+<body>
+    <link REL="STYLESHEET" TYPE="TEXT/CSS" HREF="CSS/RISE.CSS">
+    <style>
+        .APPLICATION
+        {
+            WIDTH:50%;
+            HEIGHT:100%;
+            BACKGROUND:#729926;
+            COLOR:WHITE;
+            FONT-FAMILY:ARIAL;
+            FONT-SIZE:20PX;
+        }
+
+        .TAB
+        {
+            DISPLAY:FLEX;
+            FLEX-DIRECTION:COLUMN;
+            ALIGN-ITEMS:CENTER;
+            JUSTIFY-CONTENT:CENTER;
+        }
+
+        .CONTAINER
+        {
+            DISPLAY:FLEX;
+            FLEX-DIRECTION:COLUMN;
+        }
+
+        H1
+        {
+            FONT-SIZE:25PX;
+            FONT-WEIGHT:LIGHTER;
+        }
+
+        BUTTON
+        {
+            MARGIN:5PX;
+            PADDING:5PX;
+            BORDER-WIDTH:2PX;
+            BORDER-COLOR:WHITE;
+            BORDER-STYLE:SOLID;
+            BACKGROUND:NONE;
+            COLOR:INHERIT;
+            TRANSITION:BACKGROUND 1S, OPACITY 1S;
+        }
+
+        BUTTON:HOVER
+        {
+            BACKGROUND:RGBA(255, 255, 255, 0.5);
+        }
+
+        BUTTON:ACTIVE
+        {
+            BACKGROUND:RGBA(255, 255, 255, 1);
+        }
+    </style>
+    <script SRC="JS/LIBRARIES/BASIS.min.js"></script>
+    <script SRC="JS/RISE.JS"></script>
+    <script>
+        function openTab(event)
+        {
+            tabId++;
+            var tab = interface.createTab(tabId);
+            renderTab(tab);
+            interface.showTab(tabId);
+        }
+
+        function closeTab(event)
+        {
+            interface.closeTab(event.target.parentNode.parentNode.dataset.id);
+        }
+
+        function renderTab(tab)
+        {
+            tab.setCSS("TAB");
+            tab.dataset.id = tabId;
+            tab.newChildElement
+            (
+                "div",
+                {classList: ["CONTAINER"]},
+                document.newElement("h1", "You are on tab " + tab.dataset.id),
+                document.newElement("button", {eventListeners: {"click": [openTab]}}, "Open new"),
+                document.newElement("button", {eventListeners: {"click": [closeTab]}}, "Close")
+            );
+        }
+
+        var application = document.body.newChildElement("div", {classList: ["APPLICATION"]});
+        var interface = new Interface(application),
+            main = interface.createTab(0),
+            tabId = 0;
+
+        renderTab(main);
+        interface.showTab(0);
+    </script>
+</body>
+</html>
