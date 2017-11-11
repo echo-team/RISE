@@ -47,6 +47,10 @@ function Interface(parent)
 
     var current = undefined,
         stack = [],
+        properties =
+        {
+            "duration": 2
+        },
         DOM =
         {
             "parent": parent,
@@ -56,6 +60,7 @@ function Interface(parent)
         CSS =
         {
             "hidden": "RISE__HIDDEN",
+            "noAnimation": "RISE__NO-ANIMATION",
             "container":
             {
                 "normal": "RISE__CONTAINER",
@@ -96,17 +101,22 @@ function Interface(parent)
     {
         if (DOM.tabs[name])
         {
-            var previous = stack[stack.length - 2];
-
-            if (previous != undefined)
-            {
-                DOM.tabs[previous].setCSS(CSS.hidden);
-            }
 
             stack.push(name);
             DOM.tabs[name].removeCSS(CSS.hidden);
+            DOM.container.removeCSS(CSS.noAnimation);
             DOM.container.style.left = - DOM.tabs[name].offsetLeft + "PX";
-            console.log(stack);
+
+            if (DOM.tabs[stack.length - 2])
+            {
+                setTimeout((function()
+                            {
+                                DOM.tabs[stack.length - 2].setCSS(CSS.hidden);
+                                DOM.container.setCSS(CSS.noAnimation);
+                                DOM.container.style.left = "0PX";
+
+                            }).bind(this), properties.duration * 1000);
+            }
         }
         else
         {
@@ -126,16 +136,18 @@ function Interface(parent)
             var current = stack.pop(),
                 previous = stack[stack.length - 1];
 
-            DOM.tabs[current].setCSS(CSS.hidden);
-            if (previous != undefined)
-            {
-                DOM.tabs[previous].removeCSS(CSS.hidden);
-                DOM.container.style.left = DOM.tabs[previous].offsetLeft + "PX";
-            }
-            else
-            {
-                DOM.container.style.left = "0PX";
-            }
+            DOM.tabs[previous].removeCSS(CSS.hidden);
+            DOM.container.style.left = - DOM.tabs[current].offsetLeft + "PX";
+            var layoutTrigger = DOM.container.offsetHeight;
+            DOM.container.removeCSS(CSS.noAnimation);
+            DOM.container.style.left = "0PX";
+
+            setTimeout((function()
+                       {
+                            DOM.container.setCSS(CSS.noAnimation);
+                            DOM.tabs[current].setCSS(CSS.hidden);
+
+                       }).bind(this), properties.duration * 1000);
         }
         else
         {
@@ -152,9 +164,22 @@ function Interface(parent)
     {
         if (DOM.tabs[name])
         {
-            this.hideTab(name);
-            DOM.container.removeChildren(DOM.tabs[name]);
-            delete DOM.tabs[name];
+            if (DOM.tabs[name].classList.contains(CSS.hidden))
+            {
+                DOM.container.removeChildren(DOM.tabs[name]);
+                delete DOM.tabs[name];
+            }
+            else
+            {
+                this.hideTab(name);
+                setTimeout((function()
+                            {
+                                DOM.container.removeChildren(DOM.tabs[name]);
+                                delete DOM.tabs[name];
+
+                            }).bind(this), properties.duration * 1000);
+            }
+
         }
         else
         {
@@ -166,4 +191,5 @@ function Interface(parent)
      * Creating a base block
     */
     DOM.container = parent.newChildElement("div", {classList: [CSS.container.normal]});
+    DOM.container.style.transitionDuration = properties.duration + "s";
 };
