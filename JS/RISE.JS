@@ -46,7 +46,7 @@ function Interface(parent)
     }
 
     var current = undefined,
-        previous = undefined,
+        stack = [],
         DOM =
         {
             "parent": parent,
@@ -88,23 +88,25 @@ function Interface(parent)
     };
 
     /**
-     * Shows tab on userscreen
+     * Shows tab on DOM
      *
-     * @param name - id of new tab;
+     * @param name - id of tab to show;
      */
     this.showTab = function(name)
     {
         if (DOM.tabs[name])
         {
+            var previous = stack[stack.length - 2];
+
             if (previous != undefined)
             {
                 DOM.tabs[previous].setCSS(CSS.hidden);
             }
 
-            previous = current;
-            current = name;
+            stack.push(name);
             DOM.tabs[name].removeCSS(CSS.hidden);
             DOM.container.style.left = - DOM.tabs[name].offsetLeft + "PX";
+            console.log(stack);
         }
         else
         {
@@ -112,28 +114,53 @@ function Interface(parent)
         }
     };
 
-    /*this.closeTab = function(name)
+    /**
+     * Hides tab from DOM
+     *
+     * @param name - id of tab to hide;
+     */
+    this.hideTab = function(name)
     {
         if (DOM.tabs[name])
         {
-            if (previous)
+            var current = stack.pop(),
+                previous = stack[stack.length - 1];
+
+            DOM.tabs[current].setCSS(CSS.hidden);
+            if (previous != undefined)
             {
                 DOM.tabs[previous].removeCSS(CSS.hidden);
-                DOM.container.style.left = DOM.tabs[previous].clientLeft + "PX";
+                DOM.container.style.left = DOM.tabs[previous].offsetLeft + "PX";
             }
             else
             {
                 DOM.container.style.left = "0PX";
             }
-            DOM.container.removeChildren(DOM.tabs[name]);
-            current = previous;
-            previous = undefined;
         }
         else
         {
             console.warn("ERROR: no tab called " + name);
         }
-    }*/
+    }
+
+    /**
+     * Removes tab from DOM;
+     *
+     * @param name - id of tab to remove;
+     */
+    this.removeTab = function(name)
+    {
+        if (DOM.tabs[name])
+        {
+            this.hideTab(name);
+            DOM.container.removeChildren(DOM.tabs[name]);
+            delete DOM.tabs[name];
+        }
+        else
+        {
+            console.warn("ERROR: no tab called " + name);
+        }
+    };
 
     /**
      * Creating a base block

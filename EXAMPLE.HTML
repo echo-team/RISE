@@ -69,7 +69,12 @@
 
         function closeTab(event)
         {
-            interface.closeTab(event.target.parentNode.parentNode.dataset.id);
+            interface.removeTab(event.target.parentNode.parentNode.dataset.id);
+        }
+
+        function hideTab(event)
+        {
+            interface.hideTab(event.target.parentNode.parentNode.dataset.id);
         }
 
         function renderTab(tab)
@@ -79,14 +84,15 @@
             tab.newChildElement
             (
                 "div",
-                {classList: ["CONTAINER"]},
+                {classList: "CONTAINER"},
                 document.newElement("h1", "You are on tab " + tab.dataset.id),
-                document.newElement("button", {eventListeners: {"click": [openTab]}}, "Open new"),
-                document.newElement("button", {eventListeners: {"click": [closeTab]}}, "Close")
+                document.newElement("button", {eventListeners: {"click": openTab}}, "Open new"),
+                document.newElement("button", {eventListeners: {"click": hideTab}}, "Hide"),
+                document.newElement("button", {eventListeners: {"click": closeTab}}, "Close")
             );
         }
 
-        var application = document.body.newChildElement("div", {classList: ["APPLICATION"]});
+        var application = document.body.newChildElement("div", {classList: "APPLICATION"});
         var interface = new Interface(application),
             main = interface.createTab(0),
             tabId = 0;
