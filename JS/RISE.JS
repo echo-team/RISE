@@ -1,10 +1,12 @@
 /**
  * Checkes if is this tab in DOM;
  *
- * @param {Element} parent - link to DOMElement where interface will be created;
+ * @param {Element} parent         - link to DOMElement where interface will be created;
+ * @param {Object} params          - properties of the Interface class
+ * @param {Number} params.duration - time of animation
  * @return {Interface}
  */
-function Interface(parent)
+function Interface(parent, params)
 {
     /**
      * Checkes if is this tab in DOM;
@@ -49,7 +51,7 @@ function Interface(parent)
         stack = [],
         properties =
         {
-            "duration": 2
+            "duration": (params != undefined && params.duration != undefined) ? params.duration : 1
         },
         DOM =
         {
