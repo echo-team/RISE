@@ -97,14 +97,6 @@ function Interface(parent, params)
     };
 
     /**
-     * Sets tab position with dependancy on orientation
-     */
-    function setTabPosition()
-    {
-
-    }
-
-    /**
      * Shows tab on DOM
      *
      * @param name - id of tab to show;
