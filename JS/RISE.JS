@@ -1,9 +1,10 @@
 /**
  * Checkes if is this tab in DOM;
  *
- * @param {Element} parent         - link to DOMElement where interface will be created;
- * @param {Object} params          - properties of the Interface class
- * @param {Number} params.duration - time of animation
+ * @param {Element} parent            - link to DOMElement where interface will be created;
+ * @param {Object} params             - properties of the Interface class
+ * @param {Number} params.duration    - time of animation
+ * @param {Number} params.orientation - direction of animation ('VERTICAL' or 'HORISONTAL')
  * @return {Interface}
  */
 function Interface(parent, params)
@@ -51,7 +52,8 @@ function Interface(parent, params)
         stack = [],
         properties =
         {
-            "duration": (params != undefined && params.duration != undefined) ? params.duration : 1
+            "duration": (params != undefined && params.duration != undefined) ? params.duration : 1,
+            "orientation": (params != undefined && (params.orientation == 'HORISONTAL' || params.orientation == 'VERTICAL')) ? params.orientation : 'HORISONTAL'
         },
         DOM =
         {
@@ -66,8 +68,8 @@ function Interface(parent, params)
             "container":
             {
                 "normal": "RISE__CONTAINER",
-                "portrait": "RISE__CONTAINER--PORTRAIT",
-                "album": "RISE__CONTAINER--PORTRAIT"
+                "horisontal": "RISE__CONTAINER--HORISONTAL",
+                "vertical": "RISE__CONTAINER--VERTICAL"
             },
             "tab": "RISE__CONTAINER__TAB"
         };
@@ -95,6 +97,14 @@ function Interface(parent, params)
     };
 
     /**
+     * Sets tab position with dependancy on orientation
+     */
+    function setTabPosition()
+    {
+
+    }
+
+    /**
      * Shows tab on DOM
      *
      * @param name - id of tab to show;
@@ -108,6 +118,7 @@ function Interface(parent, params)
             DOM.tabs[name].removeCSS(CSS.hidden);
             DOM.container.removeCSS(CSS.noAnimation);
             DOM.container.style.left = - DOM.tabs[name].offsetLeft + "PX";
+            DOM.container.style.top = - DOM.tabs[name].offsetTop + "PX";
 
             if (DOM.tabs[stack.length - 2])
             {
@@ -116,6 +127,7 @@ function Interface(parent, params)
                                 DOM.tabs[stack.length - 2].setCSS(CSS.hidden);
                                 DOM.container.setCSS(CSS.noAnimation);
                                 DOM.container.style.left = "0PX";
+                                DOM.container.style.top = "0PX";
 
                             }).bind(this), properties.duration * 1000);
             }
@@ -140,9 +152,11 @@ function Interface(parent, params)
 
             DOM.tabs[previous].removeCSS(CSS.hidden);
             DOM.container.style.left = - DOM.tabs[current].offsetLeft + "PX";
+            DOM.container.style.top = - DOM.tabs[current].offsetTop + "PX";
             var layoutTrigger = DOM.container.offsetHeight;
             DOM.container.removeCSS(CSS.noAnimation);
             DOM.container.style.left = "0PX";
+            DOM.container.style.top = "0PX";
 
             setTimeout((function()
                        {
@@ -192,6 +206,17 @@ function Interface(parent, params)
     /**
      * Creating a base block
     */
-    DOM.container = parent.newChildElement("div", {classList: [CSS.container.normal]});
+    DOM.container = parent.newChildElement
+    (
+        "div",
+        {
+            classList:
+            [
+                CSS.container.normal,
+                CSS.container[properties.orientation.toLowerCase()]
+            ]
+        }
+    );
     DOM.container.style.transitionDuration = properties.duration + "s";
+    parent.style.overflow = "hidden";
 };

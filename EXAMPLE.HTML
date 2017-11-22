@@ -93,7 +93,7 @@
         }
 
         var application = document.body.newChildElement("div", {classList: "APPLICATION"});
-        var interface = new Interface(application),
+        var interface = new Interface(application, {orientation: "VERTICAL"}),
             main = interface.createTab(0),
             tabId = 0;
 
