@@ -29,27 +29,10 @@ function Interface(parent, params)
         return answer;
     };
 
-    /**
-     * Checkes orientation of DOM;
-     *
-     * @return {Bool} - 1 if orientation is portret, 0 if orientation is album;
-     */
-    function isPortrait()
-    {
-        return parent.clientWidth/parent.clientHeight < 1.5;
-    };
-
-    function resize()
-    {
-        if (isPortrait())
-        {
-            DOM.container.removeCSS(CSS.container.album);
-            DOM.container.setCSS(CSS.container.portrait);
-        }
-    }
-
-    var current = undefined,
+    var timer = undefined,
+        current = undefined,
         stack = [],
+        order = [],
         properties =
         {
             "duration": (params != undefined && params.duration != undefined) ? params.duration : 1,
@@ -63,15 +46,15 @@ function Interface(parent, params)
         },
         CSS =
         {
-            "hidden": "RISE__HIDDEN",
-            "noAnimation": "RISE__NO-ANIMATION",
+            "hidden": "RISE--HIDDEN",
+            "noAnimation": "RISE--NO-ANIMATION",
             "container":
             {
                 "normal": "RISE__CONTAINER",
                 "horisontal": "RISE__CONTAINER--HORISONTAL",
                 "vertical": "RISE__CONTAINER--VERTICAL"
             },
-            "tab": "RISE__CONTAINER__TAB"
+            "tab": "RISE__TAB"
         };
 
     /**
@@ -82,19 +65,46 @@ function Interface(parent, params)
      */
     this.createTab = function(name)
     {
+
+        order.push(name);
         DOM.tabs[name] = DOM.container.newChildElement("div", {classList: [CSS.tab, CSS.hidden]});
+
         return DOM.tabs[name];
     };
 
     /**
      * Returns a current tab
      *
-     * @return {Elewment} - current tab
+     * @return {Element} - current tab
      */
     this.getCurrentTab = function()
     {
         return current ? DOM.tabs[current] : null;
     };
+
+    /**
+     * Returns a tab name
+     *
+     * @param {Element}  - DOM-Element in tab
+     * @return {Element} - name of the found tab
+     */
+    this.getTabName = function(element)
+    {
+        while (element.parentNode && element.parentNode != DOM.container)
+        {
+            element = element.parentNode;
+        }
+
+        for (let name in DOM.tabs)
+        {
+            if (DOM.tabs[name] == element)
+            {
+                return name;
+            }
+        }
+
+        return undefined;
+    }
 
     /**
      * Shows tab on DOM
@@ -112,11 +122,11 @@ function Interface(parent, params)
             DOM.container.style.left = - DOM.tabs[name].offsetLeft + "PX";
             DOM.container.style.top = - DOM.tabs[name].offsetTop + "PX";
 
-            if (DOM.tabs[stack.length - 2])
+            if (DOM.tabs[stack[stack.length - 2]])
             {
                 setTimeout((function()
                             {
-                                DOM.tabs[stack.length - 2].setCSS(CSS.hidden);
+                                DOM.tabs[stack[stack.length - 2]].setCSS(CSS.hidden);
                                 DOM.container.setCSS(CSS.noAnimation);
                                 DOM.container.style.left = "0PX";
                                 DOM.container.style.top = "0PX";
@@ -137,30 +147,7 @@ function Interface(parent, params)
      */
     this.hideTab = function(name)
     {
-        if (DOM.tabs[name])
-        {
-            var current = stack.pop(),
-                previous = stack[stack.length - 1];
-
-            DOM.tabs[previous].removeCSS(CSS.hidden);
-            DOM.container.style.left = - DOM.tabs[current].offsetLeft + "PX";
-            DOM.container.style.top = - DOM.tabs[current].offsetTop + "PX";
-            var layoutTrigger = DOM.container.offsetHeight;
-            DOM.container.removeCSS(CSS.noAnimation);
-            DOM.container.style.left = "0PX";
-            DOM.container.style.top = "0PX";
-
-            setTimeout((function()
-                       {
-                            DOM.container.setCSS(CSS.noAnimation);
-                            DOM.tabs[current].setCSS(CSS.hidden);
-
-                       }).bind(this), properties.duration * 1000);
-        }
-        else
-        {
-            console.warn("ERROR: no tab called " + name);
-        }
+        this.showTab(name);
     }
 
     /**
@@ -172,6 +159,7 @@ function Interface(parent, params)
     {
         if (DOM.tabs[name])
         {
+
             if (DOM.tabs[name].classList.contains(CSS.hidden))
             {
                 DOM.container.removeChildren(DOM.tabs[name]);
@@ -179,13 +167,22 @@ function Interface(parent, params)
             }
             else
             {
-                this.hideTab(name);
+                /*this.hideTab(name);
                 setTimeout((function()
                             {
                                 DOM.container.removeChildren(DOM.tabs[name]);
                                 delete DOM.tabs[name];
 
-                            }).bind(this), properties.duration * 1000);
+                            }).bind(this), properties.duration * 1000);*/
+            }
+
+            let indexInStack = stack.indexOf(name);
+
+            order.splice(order.indexOf(name), 1);
+            while (indexInStack != -1)
+            {
+                stack.splice(indexInStack, 1);
+                indexInStack = stack.indexOf(name);
             }
 
         }
