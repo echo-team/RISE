@@ -232,3 +232,4 @@ function Interface(parent, params)
     DOM.container.style.transitionDuration = properties.duration + "s";
     parent.style.overflow = "hidden";
 };
+

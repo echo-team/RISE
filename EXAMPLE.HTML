@@ -63,6 +63,7 @@
         {
             tabId++;
             var tab = interface.createTab(tabId);
+            tab.dataset.previous = tabId - 1;
             renderTab(tab);
             interface.showTab(tabId);
         }
@@ -74,7 +75,7 @@
 
         function hideTab(event)
         {
-            interface.hideTab(event.target.parentNode.parentNode.dataset.id);
+            interface.showTab(event.target.parentNode.parentNode.dataset.previous);
         }
 
         function renderTab(tab)
