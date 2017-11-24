@@ -1,0 +1,28 @@
+{
+    "combineOnSave": false,
+    "combine":
+    [
+        {
+            "files":
+            [
+                "JS/LIBRARIES/BASIS.js",
+                "JS/RISE.JS"
+            ],
+            "output": "BUILD/RISE.full.js"
+        },
+        {
+            "files":
+            [
+                "JS/RISE.JS"
+            ],
+            "output": "BUILD/RISE.js"
+        },
+        {
+            "files":
+            [
+                "CSS/RISE.CSS"
+            ],
+            "output": "BUILD/RISE.css"
+        }
+    ]
+}
