@@ -31,7 +31,6 @@ function Interface(parent, params)
 
     var timer = undefined,
         current = undefined,
-        stack = [],
         order = [],
         properties =
         {
@@ -85,8 +84,8 @@ function Interface(parent, params)
     /**
      * Returns a tab name
      *
-     * @param {Element}  - DOM-Element in tab
-     * @return {Element} - name of the found tab
+     * @param {Element} element - DOM-Element in tab
+     * @return {Element}        - name of the found tab
      */
     this.getTabName = function(element)
     {
@@ -107,6 +106,36 @@ function Interface(parent, params)
     }
 
     /**
+     * Return a direction of swiping
+     *
+     * @param {String} start - name of the tab where swipe starts
+     * @param {String} end   - name of the tab where swipe ends
+     * @return {Number}      - 1 if swipe is to right, 0 if start equals end, else -1
+     */
+    function getSwipeDirection(start, end)
+    {
+        if (DOM.tabs[start] && DOM.tabs[end])
+        {
+            if (order.indexOf(start) < order.indexOf(end))
+            {
+                return 1;
+            }
+            else if (start == end)
+            {
+                return 0;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        else
+        {
+            console.warn("ERROR: no tab called " + start + " or " + end);
+        }
+    }
+
+    /**
      * Shows tab on DOM
      *
      * @param name - id of tab to show;
@@ -115,18 +144,45 @@ function Interface(parent, params)
     {
         if (DOM.tabs[name])
         {
+            let previous = current,
+                to = {x: undefined, y: undefined},
+                from = {x: undefined, y: undefined},
+                direction = getSwipeDirection(current, name);
 
-            stack.push(name);
+            console.log(direction);
+            current = name;
             DOM.tabs[name].removeCSS(CSS.hidden);
-            DOM.container.removeCSS(CSS.noAnimation);
-            DOM.container.style.left = - DOM.tabs[name].offsetLeft + "PX";
-            DOM.container.style.top = - DOM.tabs[name].offsetTop + "PX";
+            if (direction == 1)
+            {
+                to.x = - DOM.tabs[current].offsetLeft + "PX";
+                to.y = - DOM.tabs[current].offsetTop + "PX";
+                from.x = "0PX";
+                from.y = "0PX";
+            }
+            else if (direction == -1)
+            {
+                from.x = - DOM.tabs[previous].offsetLeft + "PX";
+                from.y = - DOM.tabs[previous].offsetTop + "PX";
+                to.x = "0PX";
+                to.y = "0PX";
+            }
 
-            if (DOM.tabs[stack[stack.length - 2]])
+            DOM.container.style.left = from.x;
+            DOM.container.style.top = from.y;
+            var layoutTrigger = DOM.container.offsetHeight;
+            DOM.container.removeCSS(CSS.noAnimation);
+            DOM.container.style.left = to.x;
+            DOM.container.style.top = to.y;
+
+            if (DOM.tabs[current])
             {
                 setTimeout((function()
                             {
-                                DOM.tabs[stack[stack.length - 2]].setCSS(CSS.hidden);
+                                if (DOM.tabs[previous])
+                                {
+                                    DOM.tabs[previous].setCSS(CSS.hidden);
+                                }
+
                                 DOM.container.setCSS(CSS.noAnimation);
                                 DOM.container.style.left = "0PX";
                                 DOM.container.style.top = "0PX";
@@ -176,14 +232,7 @@ function Interface(parent, params)
                             }).bind(this), properties.duration * 1000);*/
             }
 
-            let indexInStack = stack.indexOf(name);
-
             order.splice(order.indexOf(name), 1);
-            while (indexInStack != -1)
-            {
-                stack.splice(indexInStack, 1);
-                indexInStack = stack.indexOf(name);
-            }
 
         }
         else
