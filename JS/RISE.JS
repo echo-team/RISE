@@ -219,20 +219,13 @@ function Interface(parent, params)
             if (DOM.tabs[name].classList.contains(CSS.hidden))
             {
                 DOM.container.removeChildren(DOM.tabs[name]);
+                order.splice(order.indexOf(name), 1);
                 delete DOM.tabs[name];
             }
             else
             {
-                /*this.hideTab(name);
-                setTimeout((function()
-                            {
-                                DOM.container.removeChildren(DOM.tabs[name]);
-                                delete DOM.tabs[name];
-
-                            }).bind(this), properties.duration * 1000);*/
+                console.warn("ERROR: you must open another tab before removing.");
             }
-
-            order.splice(order.indexOf(name), 1);
 
         }
         else
