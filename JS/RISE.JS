@@ -9,25 +9,6 @@
  */
 function Interface(parent, params)
 {
-    /**
-     * Checkes if is this tab in DOM;
-     *
-     * @param {String} name - id of tab to check;
-     * @return {Bool}       - 1 if tab is open, 0 if tab is not open;
-     */
-    function isOpened(name)
-    {
-        var answer = 0;
-        tabs.forEach
-        (
-            (tab) =>
-            {
-                tab.id ? answer = 1 : null;
-            }
-        );
-
-        return answer;
-    };
 
     var timer = undefined,
         current = undefined,
@@ -94,7 +75,7 @@ function Interface(parent, params)
             element = element.parentNode;
         }
 
-        for (let name in DOM.tabs)
+        for (var name in DOM.tabs)
         {
             if (DOM.tabs[name] == element)
             {
@@ -144,7 +125,7 @@ function Interface(parent, params)
     {
         if (DOM.tabs[name])
         {
-            let previous = current,
+            var previous = current,
                 to = {x: undefined, y: undefined},
                 from = {x: undefined, y: undefined},
                 direction = getSwipeDirection(current, name);
