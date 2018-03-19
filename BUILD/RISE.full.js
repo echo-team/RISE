@@ -287,7 +287,7 @@ Element.prototype.newChildElement = function()
  * @param {Number} params.orientation - direction of animation ('VERTICAL' or 'HORISONTAL')
  * @return {Interface}
  */
-function Interface(parent, params)
+function Rise(parent, params)
 {
 
     var timer = undefined,
