@@ -18,7 +18,7 @@ Firstly you have to create new object of the Interface class:
      * @param  {Object} params             - properties of the Interface class
      * @param  {Number} params.duration    - time of animation in seconds (if not given, then 1 second)
      * @param  {Number} params.orientation - direction of animation ("VERTICAL" or "HORISONTAL", if not given, then "HORISONTAL")
-     * @return {Interface}                - class instance
+     * @return {Interface}                 - class instance
     */
     let rise = new Rise(parent, {duration: 1, orientation: "VERTICAL"});
 
