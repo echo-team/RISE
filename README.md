@@ -13,17 +13,47 @@ RISE is working with another our project called BASIS (see its repo), so you hav
 Here is the basics for detailed information see comments in the non-builded js code <br/>
 Firstly you have to create new object of the Interface class:
 
-    let interface = new Interface(application);
+    /**
+     * @param  {Element} parent            - link to DOMElement where interface will be created;
+     * @param  {Object} params             - properties of the Interface class
+     * @param  {Number} params.duration    - time of animation in seconds (if not given, then 1 second)
+     * @param  {Number} params.orientation - direction of animation ("VERTICAL" or "HORISONTAL", if not given, then "HORISONTAL")
+     * @return {Interface}                - class instance
+    */
+    let rise = new Rise(parent, {duration: 1, orientation: "VERTICAL"});
 
-After that you can use methods such as:
+Methods to rule tabs:
 
-    // this will create and show tab on the screen
-    let tab = interface.createTab("name");
-    interface.showTab("name");
+    /**
+     * Creates a new tab and appends it to DOM;
+     * @param  {String} name - id of new tab;
+     * @return {Element}     - link to created tab;
+     */
+    let tab = rise.createTab("name");
     
-    // this will show nother tab on the screen
-    interface.showTab("another_name");
+    /**
+     * Swipes to pointed tab
+     * @param {String} name - id of tab to show;
+     */
+    rise.showTab("name");
     
-    // this will close tab, notice that in this version you must open another tab before close this one
-    interface.showTab("another_name");
-    interface.closeTab("name");
+    /**
+     * Removes tab from DOM, notice that you must unhide with show method another tab before this
+     * @param {String} name - id of tab to remove;
+     */
+    rise.closeTab("name");
+
+Methods to get information about tabs:
+
+    /**
+     * Returns a current tab
+     * @return {Element} - current tab
+     */
+    rise.getCurrentTab();
+    
+    /**
+     * Returns a tab name by the DOM element
+     * @param  {Element} element - DOM element in tab
+     * @return {String}          - name of the found tab
+     */
+    rise.getTabName(element);
