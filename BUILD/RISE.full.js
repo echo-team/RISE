@@ -280,11 +280,10 @@ Element.prototype.newChildElement = function()
 
 /**
  * Checkes if is this tab in DOM;
- *
- * @param {Element} parent            - link to DOMElement where interface will be created;
- * @param {Object} params             - properties of the Interface class
- * @param {Number} params.duration    - time of animation
- * @param {Number} params.orientation - direction of animation ('VERTICAL' or 'HORISONTAL')
+ * @param  {Element} parent            - link to DOMElement where interface will be created;
+ * @param  {Object} params             - properties of the Interface class
+ * @param  {Number} params.duration    - time of animation
+ * @param  {Number} params.orientation - direction of animation ('VERTICAL' or 'HORISONTAL')
  * @return {Interface}
  */
 function Rise(parent, params)
@@ -319,9 +318,8 @@ function Rise(parent, params)
 
     /**
      * Creates a new tab and appends it to DOM;
-     *
-     * @param name - id of new tab;
-     * @return {Element} link to created tab;
+     * @param  {String} name - id of new tab;
+     * @return {Element}     - link to created tab;
      */
     this.createTab = function(name)
     {
@@ -334,7 +332,6 @@ function Rise(parent, params)
 
     /**
      * Returns a current tab
-     *
      * @return {Element} - current tab
      */
     this.getCurrentTab = function()
@@ -343,10 +340,9 @@ function Rise(parent, params)
     };
 
     /**
-     * Returns a tab name
-     *
-     * @param {Element} element - DOM-Element in tab
-     * @return {Element}        - name of the found tab
+     * Returns a tab name by the DOM element
+     * @param  {Element} element - DOM element in tab
+     * @return {String}          - name of the found tab
      */
     this.getTabName = function(element)
     {
@@ -368,7 +364,6 @@ function Rise(parent, params)
 
     /**
      * Return a direction of swiping
-     *
      * @param {String} start - name of the tab where swipe starts
      * @param {String} end   - name of the tab where swipe ends
      * @return {Number}      - 1 if swipe is to right, 0 if start equals end, else -1
@@ -397,9 +392,8 @@ function Rise(parent, params)
     }
 
     /**
-     * Shows tab on DOM
-     *
-     * @param name - id of tab to show;
+     * Swipes to pointed tab
+     * @param {String} name - id of tab to show;
      */
     this.showTab = function(name)
     {
@@ -459,18 +453,16 @@ function Rise(parent, params)
 
     /**
      * Hides tab from DOM
-     *
      * @param name - id of tab to hide;
      */
     this.hideTab = function(name)
     {
-        this.showTab(name);
+        //ToDo
     }
 
     /**
-     * Removes tab from DOM;
-     *
-     * @param name - id of tab to remove;
+     * Removes tab from DOM, notice that you must unhide with show method another tab before this
+     * @param {String} name - id of tab to remove;
      */
     this.removeTab = function(name)
     {

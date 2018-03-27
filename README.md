@@ -41,7 +41,7 @@ Methods to rule tabs:
      * Removes tab from DOM, notice that you must unhide with show method another tab before this
      * @param {String} name - id of tab to remove;
      */
-    rise.closeTab("name");
+    rise.removeTab("name");
 
 Methods to get information about tabs:
 
