@@ -117,6 +117,11 @@ function Rise(parent, params)
      */
     this.showTab = function(name)
     {
+        if (name == current)
+        {
+            return;
+        }
+
         if (DOM.tabs[name])
         {
             var previous = current,
@@ -124,7 +129,6 @@ function Rise(parent, params)
                 from = {x: undefined, y: undefined},
                 direction = getSwipeDirection(current, name);
 
-            console.log(direction);
             current = name;
             DOM.tabs[name].removeCSS(CSS.hidden);
             if (direction == 1)
